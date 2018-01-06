@@ -1,0 +1,31 @@
+page-currency {
+  ion-card-content {
+    h2 {
+      font-size: 18px !important;
+      font-weight: bold !important;
+
+      small {
+        color: #545454;
+      }
+    }
+  }
+
+  .graph {
+    height: 400px;
+    width: 100%;
+  }
+
+  .trendUp {
+    color: #34ae41;
+  }
+  .trendDown {
+    color: #9d1a14;
+  }
+  .trendUp::before {
+    content: "+";
+  }
+
+  .dataCard {
+    cursor: help;
+  }
+}

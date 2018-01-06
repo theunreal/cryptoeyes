@@ -1,0 +1,51 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>
+      CryptoEyes
+    </ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <h1>Features Currencies</h1>
+
+  <ion-grid>
+    <ion-row>
+      <ion-col col-12 col-xl-3 col-md-3 *ngFor="let coin of coins"
+               (click)="viewCurrency(coin.short_name)">
+        <ion-card class="box">
+
+          <ion-item>
+            <ion-avatar item-start *ngIf="coin.image_url">
+              <img src="https://www.cryptocompare.com/{{coin.image_url}}">
+            </ion-avatar>
+            <h2>{{coin.name}}</h2>
+            <p>{{coin.short_name}}</p>
+          </ion-item>
+
+          <ion-card-content>
+            <ion-list>
+              <ion-item>
+                <ion-icon item-start name="cash"></ion-icon>
+                Price
+                <ion-badge item-end>{{coin.price | number: '0.0-5'}}$</ion-badge>
+              </ion-item>
+              <ion-item *ngIf="coin.priceTrend">
+                <ion-icon item-start name="trending-down" *ngIf="coin.priceTrend < 0"></ion-icon>
+                <ion-icon item-start name="trending-up" *ngIf="coin.priceTrend > 0"></ion-icon>
+                24 Hours
+                <ion-badge item-end>{{coin.priceTrend | number: '0.0-2'}}%</ion-badge>
+              </ion-item>
+              <ion-item *ngIf="coin.yesterdayTrend">
+                <ion-icon item-start name="trending-down" *ngIf="coin.yesterdayTrend < 0"></ion-icon>
+                <ion-icon item-start name="trending-up" *ngIf="coin.yesterdayTrend > 0"></ion-icon>
+                Yesterday
+                <ion-badge item-end>{{coin.yesterdayTrend | number: '0.0-2'}}%</ion-badge>
+              </ion-item>
+            </ion-list>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

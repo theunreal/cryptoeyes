@@ -1,0 +1,92 @@
+<ion-header>
+
+  <ion-navbar>
+    <img
+      *ngIf="coin?.image_url"
+      height="24"
+      float-left
+      src="https://www.cryptocompare.com/{{coin.image_url}}">
+    <ion-title *ngIf="coin">{{coin?.name}} ({{coin?.short_name}})</ion-title>
+    <ion-title *ngIf="!coin">{{navParams.get('currency')}}</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+
+  <section *ngIf="coin">
+
+    <ion-grid>
+
+      <ion-row>
+        <ion-col col-12 col-sm-12 col-md-6 col-lg-4>
+          <ion-card (click)="viewMore('currentPrice')" class="dataCard">
+            <ion-card-content padding text-center>
+              <h2><span *ngIf="cryptoService.realTimePrices[this.coin.short_name]; else noCurrentTrend">{{cryptoService.realTimePrices[coin.short_name]}}$
+              </span>
+                <br/>
+                <ng-template #noCurrentTrend>
+                  {{coin.price | number: '0.0-5'}}$
+                </ng-template>
+              <small>Real-time Avg. Market Price</small>
+              </h2>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+
+        <ion-col col-12 col-sm-12 col-md-6 col-lg-4>
+          <ion-card (click)="viewMore('currentTrend')" class="dataCard">
+            <ion-card-content padding text-center>
+              <h2><span [class.trendUp]="coin.currentTrend > 0"
+              [class.trendDown]="coin.currentTrend < 0">{{coin.currentTrend | number: '0.0-2'}}%
+                <ion-icon name="trending-up" *ngIf="coin.currentTrend > 0"></ion-icon>
+                  <ion-icon name="trending-down" *ngIf="coin.currentTrend < 0"></ion-icon>
+                <small>({{coin.currentTrendRaw | number: '0.0-5'}}$)</small>
+                </span>
+                <br/><small>Now vs. yesterday</small></h2>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+
+        <ion-col col-12 col-sm-12 col-md-6 col-lg-4>
+          <ion-card class="dataCard" (click)="viewMore('yesterdayTrend')">
+            <ion-card-content padding text-center>
+              <h2 [class.trendUp]="coin.yesterdayTrend > 0"
+                  [class.trendDown]="coin.yesterdayTrend < 0">{{coin.yesterdayTrend | number: '0.0-2'}}%
+                <ion-icon name="trending-up" *ngIf="coin.yesterdayTrend > 0"></ion-icon>
+                <ion-icon name="trending-down" *ngIf="coin.yesterdayTrend < 0"></ion-icon>
+                <small>({{coin.yesterdayTrendRaw | number: '0.0-5'}}$)</small>
+                <br/>
+                <small>Yesterday open/close change</small></h2>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+
+    <ion-card padding>
+      <ion-segment margin-top [(ngModel)]="graphType" (ionChange)="updateChart($event)">
+        <ion-segment-button *ngFor="let view of viewTypes"
+                            [value]="view.key">
+          {{view.label}}
+        </ion-segment-button>
+      </ion-segment>
+      <ion-card-content class="graph" text-center>
+        <div [chart]="dayChartData"
+             [hidden]="graphType !== 'day'"></div>
+        <div [chart]="hourChartData"
+             [hidden]="graphType !== 'hour'"></div>
+        <div [chart]="realTimeChartData"
+             [hidden]="graphType !== 'realtime'"></div>
+        <ng-template #noData>
+          <h2>Waiting for price changes...</h2>
+        </ng-template>
+
+      </ion-card-content>
+
+    </ion-card>
+
+  </section>
+
+</ion-content>
